@@ -88,12 +88,20 @@ export default function GameTable() {
                         </p>
                     )}
                 </div>
-                <button
-                    onClick={handleAdd}
-                    className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700"
-                >
-                    Ajouter un jeu
-                </button>
+                <div className="space-x-2">
+                    <button
+                        onClick={() => window.location.href = '/search'}
+                        className="bg-gray-600 text-white px-4 py-2 rounded hover:bg-gray-700"
+                    >
+                        Recherche Avancée
+                    </button>
+                    <button
+                        onClick={handleAdd}
+                        className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700"
+                    >
+                        Ajouter un jeu
+                    </button>
+                </div>
             </div>
 
             <div className="overflow-x-auto">
@@ -119,8 +127,8 @@ export default function GameTable() {
                                 <td className="border p-2">{game.annee_sortie}</td>
                                 <td className="border p-2">
                                     <span className={`px-2 py-1 rounded ${game.metacritic_score >= 80 ? 'bg-green-100 text-green-800' :
-                                            game.metacritic_score >= 60 ? 'bg-yellow-100 text-yellow-800' :
-                                                'bg-red-100 text-red-800'
+                                        game.metacritic_score >= 60 ? 'bg-yellow-100 text-yellow-800' :
+                                            'bg-red-100 text-red-800'
                                         }`}>
                                         {game.metacritic_score}
                                     </span>
