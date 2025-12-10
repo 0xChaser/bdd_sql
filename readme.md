@@ -198,4 +198,3 @@ SELECT COUNT(*) as nombre_produits_en_promo,
 FROM produits
 WHERE en_promotion = 1;
 ```
-# bdd_sql
