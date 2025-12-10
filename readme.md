@@ -69,13 +69,13 @@ HAVING COUNT(cmd.commande_id) > 1
 ORDER BY nombre_commandes DESC;
 ```
 
-### Réponse 9
+### Requête 9
 ```sql
 SELECT ROUND(AVG(montant_total), 2) AS panier_moyen
 FROM commandes;
 ```
 
-### Réponse 10
+### Requête 10
 ```sql
 SELECT p.nom_produit,
        SUM(dc.quantite) AS quantite_totale_vendue,
@@ -88,7 +88,7 @@ ORDER BY quantite_totale_vendue DESC
 LIMIT 3;
 ```
 
-### Réponse 11
+### Requête 11
 ```sql
 SELECT cmd.commande_id, c.email, cmd.date_commande,
        cmd.date_livraison_estimee, cmd.date_livraison_reelle,
@@ -103,7 +103,7 @@ WHERE cmd.statut = 'livree'
 ORDER BY cmd.statut;
 ```
 
-### Réponse 12
+### Requête 12
 ```sql
 SELECT cat.nom_categorie,
        COUNT(p.produit_id) AS nombre_produits,
@@ -114,7 +114,7 @@ GROUP BY cat.categorie_id, cat.nom_categorie
 ORDER BY nombre_produits DESC;
 ```
 
-### Réponse 13
+### Requête 13
 ```sql
 SELECT ville, COUNT(client_id) AS nombre_clients
 FROM clients
@@ -122,7 +122,7 @@ GROUP BY ville
 ORDER BY nombre_clients DESC;
 ```
 
-### Réponse 14
+### Requête 14
 ```sql
 SELECT p.produit_id, p.nom_produit
 FROM produits p
@@ -131,7 +131,7 @@ WHERE a.avis_id IS NULL
 ORDER BY p.date_ajout DESC;
 ```
 
-### Réponse 15
+### Requête 15
 ```sql
 SELECT YEAR(date_commande) AS annee,
        MONTH(date_commande) AS mois,
@@ -143,7 +143,7 @@ GROUP BY YEAR(date_commande), MONTH(date_commande), DATE_FORMAT(date_commande, '
 ORDER BY annee, mois;
 ```
 
-### Réponse 16
+### Requête 16
 ```sql
 SELECT f.nom_fournisseur, COUNT(p.produit_id) AS nombre_produits
 FROM fournisseurs f
@@ -153,7 +153,7 @@ HAVING COUNT(p.produit_id) > 3
 ORDER BY nombre_produits DESC;
 ```
 
-### Réponse 17
+### Requête 17
 ```sql
 SET @produit_ref = 1;
 SET @prix_ref = (SELECT prix FROM produits WHERE produit_id = @produit_ref);
@@ -168,7 +168,7 @@ WHERE p.categorie_id = (SELECT categorie_id FROM produits WHERE produit_id = @pr
   AND p.prix BETWEEN (@prix_ref * 0.1) AND (@prix_ref * 2);
 ```
 
-### Réponse 18
+### Requête 18
 ```sql
 SELECT p.nom_produit, p.stock_quantite,
        COALESCE(SUM(dc.quantite), 0) AS quantite_vendue
@@ -178,7 +178,7 @@ GROUP BY p.produit_id
 ORDER BY quantite_vendue DESC;
 ```
 
-### Réponse 19
+### Requête 19
 ```sql
 SELECT c.client_id, c.email, MAX(cmd.date_commande) AS derniere_commande
 FROM clients c
@@ -189,7 +189,7 @@ HAVING MAX(cmd.date_commande) IS NULL
 ORDER BY derniere_commande ASC;
 ```
 
-### Réponse 20
+### Requête 20
 ```sql
 SELECT COUNT(*) as nombre_produits_en_promo,
        ROUND(AVG(prix), 2) AS prix_moyen,
