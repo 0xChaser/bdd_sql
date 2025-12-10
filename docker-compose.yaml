@@ -1,31 +1,73 @@
 services:
-  db:
-    image: mysql:8.0
-    container_name: mysql_db
-    restart: unless-stopped
-    environment:
-      MYSQL_ROOT_PASSWORD: root
-      MYSQL_DATABASE: mydatabase
-      MYSQL_USER: myuser
-      MYSQL_PASSWORD: mypassword
+  mongo:
+    container_name: "mongo_dev"
+    image: mongo
     ports:
-      - "3306:3306"
+      - "27017:27017"
     volumes:
-      - mysql_data:/var/lib/mysql
+      - mongo_data:/data/db
+    profiles:
+      - dev
 
-  phpmyadmin:
-    image: phpmyadmin:latest
-    container_name: phpmyadmin
-    restart: unless-stopped
+  mongo_prod:
+    image: mongo
+    expose:
+      - "27017"
+    volumes:
+      - mongo_data:/data/db
+    networks:
+      - traefik-net
+    profiles:
+      - prod
+
+  server_prod:
+    build: ./server
+    expose:
+      - "8080"
     environment:
-      PMA_HOST: db
-      PMA_USER: root
-      PMA_PASSWORD: root
-    ports:
-      - "8080:80"
+      - MONGO_URI=${MONGO_URI}
+    env_file:
+      - .env
+    volumes:
+      - ./server:/app
     depends_on:
-      - db
+      - mongo_prod
+    command: sh -c "npm install && npm start"
+    networks:
+      - traefik-net
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.full_js_back.rule=Host(`full-js-api.flo-isk.fr`) && PathPrefix(`/`)"
+      - "traefik.http.routers.full_js_back.entrypoints=websecure"
+      - "traefik.http.routers.full_js_back.tls=true"
+      - "traefik.http.routers.full_js_back.tls.certresolver=myresolver"
+      - "traefik.docker.network=traefik-net"
+    restart: always
+    profiles:
+      - prod
+
+  client_prod:
+    build: ./client
+    expose:
+      - "80"
+    depends_on:
+      - server_prod
+    networks:
+      - traefik-net
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.full_js_front.rule=Host(`full-js.flo-isk.fr`)"
+      - "traefik.http.routers.full_js_front.entrypoints=websecure"
+      - "traefik.http.routers.full_js_front.tls=true"
+      - "traefik.http.routers.full_js_front.tls.certresolver=myresolver"
+      - "traefik.docker.network=traefik-net"
+    restart: always
+    profiles:
+      - prod
 
 volumes:
-  mysql_data:
-    driver: local
+  mongo_data:
+
+networks:
+  traefik-net:
+      external: true
